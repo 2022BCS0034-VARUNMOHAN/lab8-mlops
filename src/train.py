@@ -7,21 +7,34 @@ print("Loading dataset...")
 
 df = pd.read_csv("data/housing.csv")
 
-# Example: assume last column is target
-X = df.iloc[:, :-1]
-y = df.iloc[:, -1]
+# Remove missing values
+df = df.dropna()
+
+print("Encoding categorical column...")
+
+# Convert ocean_proximity to numeric
+df = pd.get_dummies(df, columns=["ocean_proximity"])
+
+# Separate features and target
+X = df.drop("median_house_value", axis=1)
+y = df["median_house_value"]
 
 print("Splitting dataset...")
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 
 print("Training model...")
+
 model = LinearRegression()
 model.fit(X_train, y_train)
 
 print("Evaluating model...")
+
 predictions = model.predict(X_test)
 
 mse = mean_squared_error(y_test, predictions)
 
-print("Model training completed")
-print(f"Mean Squared Error: {mse}")
+print("Training completed")
+print("Mean Squared Error:", mse)
