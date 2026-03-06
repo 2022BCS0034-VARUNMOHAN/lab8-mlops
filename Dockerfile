@@ -2,9 +2,10 @@ FROM python:3.10
 
 WORKDIR /app
 
-COPY . .
+COPY requirements.txt .
 
-RUN pip install --upgrade pip
-RUN pip install pandas scikit-learn dvc[s3] numpy
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
 
 CMD ["python", "src/train.py"]
